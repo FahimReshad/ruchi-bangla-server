@@ -36,6 +36,23 @@ async function run() {
         res.send(result);
     })
 
+    app.post('/food', async(req, res) => {
+      const add = req.body;
+      const result = await foodCollection.insertOne(add);
+      res.send(result)
+    })
+
+    app.get("/food/:email", async (req, res) => {
+      console.log(req.params.email);
+      const cursor = foodCollection.find({ email: req.params.email });
+      // let query = {};
+      // if (req.query?.email) {
+      //   query = { email: req.params.email };
+      // }
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.get('/food/:id', async(req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id)}
