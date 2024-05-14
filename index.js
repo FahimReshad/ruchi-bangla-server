@@ -114,7 +114,7 @@ async function run() {
 
     app.get("/food/email/:email", async (req, res) => {
       console.log(req.params.email);
-      
+
       // let query = {};
       // if (req.query?.email) {
       //   query = { email: req.params.email };
@@ -157,10 +157,10 @@ async function run() {
     app.get("/purchaseFood/:email", logger, verifyToken, async (req, res) => {
       console.log(req.params.email);
       console.log("token owner info", req.user);
-      if(req.params.email !== req.user.email){
-        return res.status(403).send({message: 'forbidden access'})
+      if (req.params.email !== req.user.email) {
+        return res.status(403).send({ message: "forbidden access" });
       }
-     
+
       let query = {};
       if (req.params?.email) {
         query = { email: req.params.email };
@@ -212,16 +212,16 @@ async function run() {
       }
     });
 
-    app.get('/gallery', async(req, res) => {
+    app.get("/gallery", async (req, res) => {
       const result = await galleryCollection.find().toArray();
       res.send(result);
-    })
+    });
 
-    app.post('/gallery', async(req, res) => {
+    app.post("/gallery", async (req, res) => {
       const gallery = req.body;
       const result = await galleryCollection.insertOne(gallery);
       res.send(result);
-    })
+    });
 
     app.delete("/purchaseFood/:id", async (req, res) => {
       const id = req.params.id;
