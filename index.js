@@ -62,13 +62,14 @@ async function run() {
 
     const foodCollection = client.db("ruchiBangla").collection("foods");
     const purchaseCollection = client.db("ruchiBangla").collection("purchase");
+    const galleryCollection = client.db("ruchiBangla").collection("gallery");
 
     // auth related api:
 
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: true,
+      sameSite: "none",
     };
 
     //creating Token
@@ -104,20 +105,22 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/food/:id", async (req, res) => {
+    app.get("/food/id/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await foodCollection.findOne(query);
       res.send(result);
     });
 
-    app.get("/food/:email", async (req, res) => {
+    app.get("/food/email/:email", async (req, res) => {
       console.log(req.params.email);
-      const cursor = foodCollection.find({ email: req.params.email });
+      
       // let query = {};
       // if (req.query?.email) {
       //   query = { email: req.params.email };
       // }
+      // const cursor = foodCollection.find(query);
+      const cursor = foodCollection.find({ email: req.params.email });
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -152,7 +155,6 @@ async function run() {
     });
 
     app.get("/purchaseFood/:email", logger, verifyToken, async (req, res) => {
-      console.log(req.query.email);
       console.log(req.params.email);
       console.log("token owner info", req.user);
       if(req.params.email !== req.user.email){
@@ -209,6 +211,17 @@ async function run() {
         res.status(500).json({ error: "Internal server error" });
       }
     });
+
+    app.get('/gallery', async(req, res) => {
+      const result = await galleryCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.post('/gallery', async(req, res) => {
+      const gallery = req.body;
+      const result = await galleryCollection.insertOne(gallery);
+      res.send(result);
+    })
 
     app.delete("/purchaseFood/:id", async (req, res) => {
       const id = req.params.id;
