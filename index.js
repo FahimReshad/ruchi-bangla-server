@@ -139,12 +139,6 @@ async function run() {
 
     app.get("/food/email/:email", async (req, res) => {
       console.log(req.params.email);
-
-      // let query = {};
-      // if (req.query?.email) {
-      //   query = { email: req.params.email };
-      // }
-      // const cursor = foodCollection.find(query);
       const cursor = foodCollection.find({ email: req.params.email });
       const result = await cursor.toArray();
       res.send(result);
@@ -204,28 +198,6 @@ async function run() {
       );
       res.send(result);
     });
-
-    // app.post("/purchaseFood", async (req, res) => {
-    //   const { foodIds } = req.body;
-    //   const foodIdsWithObjectId = foodIds.map((id) => new ObjectId(id));
-
-    //   try {
-    //     // Increment the count property in the food document for each purchased item
-    //     await foodCollection.updateMany(
-    //       { _id: { $in: foodIdsWithObjectId } },
-    //       { $inc: { count: 1 } }
-    //     );
-
-    //     // Return the updated food items
-    //     const updatedFoods = await foodCollection
-    //       .find({ _id: { $inc: foodIdsWithObjectId } })
-    //       .toArray();
-    //     res.send(updatedFoods);
-    //   } catch (error) {
-    //     console.error("Error purchasing food:", error);
-    //     res.status(500).json({ error: "Internal server error" });
-    //   }
-    // });
 
     app.get("/productsCount", async (req, res) => {
       try {
