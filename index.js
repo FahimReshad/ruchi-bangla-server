@@ -12,7 +12,10 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173",
+      "https://ruchi-bangla.web.app",
+      "https://ruchi-bangla.firebaseapp.com"
+    ],
     credentials: true,
   })
 );
@@ -58,7 +61,7 @@ const verifyToken = async (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const foodCollection = client.db("ruchiBangla").collection("foods");
     const purchaseCollection = client.db("ruchiBangla").collection("purchase");
@@ -68,8 +71,8 @@ async function run() {
 
     const cookieOptions = {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+  secure: process.env.NODE_ENV === "production" ? true : false,
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     };
 
     //creating Token
@@ -109,6 +112,27 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await foodCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/food/id/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedFood = req.body;
+      const food = {
+        $set: {
+          image: updatedFood.image,
+          name: updatedFood.name,
+          category: updatedFood.category,
+          description: updatedFood.description,
+          price: updatedFood.price,
+          quantity: updatedFood.quantity,
+          made_by: updatedFood.made_by,
+          origin: updatedFood.origin,
+        },
+      };
+      const result = await foodCollection.updateOne(filter, food, options);
       res.send(result);
     });
 
@@ -231,7 +255,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
