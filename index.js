@@ -12,9 +12,10 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
       "https://ruchi-bangla.web.app",
-      "https://ruchi-bangla.firebaseapp.com"
+      "https://ruchi-bangla.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -71,8 +72,8 @@ async function run() {
 
     const cookieOptions = {
       httpOnly: true,
-  secure: process.env.NODE_ENV === "production" ? true : false,
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     };
 
     //creating Token
@@ -86,7 +87,7 @@ async function run() {
       res.cookie("token", token, cookieOptions).send({ success: true });
     });
 
-    //clearing Token
+    //clearing token:
     app.post("/logout", async (req, res) => {
       const user = req.body;
       console.log("logging out", user);
