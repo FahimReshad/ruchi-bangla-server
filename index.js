@@ -65,6 +65,7 @@ async function run() {
     // await client.connect();
 
     const foodCollection = client.db("ruchiBangla").collection("foods");
+    const reservationCollection = client.db("ruchiBangla").collection("reservation");
     const purchaseCollection = client.db("ruchiBangla").collection("purchase");
     const galleryCollection = client.db("ruchiBangla").collection("gallery");
 
@@ -102,10 +103,23 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/reservation", logger, async (req, res) => {
+      const cursor = foodCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.post("/food", async (req, res) => {
       const add = req.body;
       add.count = 0;
       const result = await foodCollection.insertOne(add);
+      res.send(result);
+    });
+
+    app.post("/reservation", async (req, res) => {
+      const add = req.body;
+      add.count = 0;
+      const result = await reservationCollection.insertOne(add);
       res.send(result);
     });
 
