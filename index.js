@@ -104,7 +104,7 @@ async function run() {
     });
 
     app.get("/reservation", logger, async (req, res) => {
-      const cursor = foodCollection.find();
+      const cursor = reservationCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
