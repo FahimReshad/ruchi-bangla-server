@@ -70,7 +70,6 @@ async function run() {
     const galleryCollection = client.db("ruchiBangla").collection("gallery");
 
     // auth related api:
-
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
