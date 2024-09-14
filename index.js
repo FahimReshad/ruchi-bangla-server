@@ -63,9 +63,10 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-
     const foodCollection = client.db("ruchiBangla").collection("foods");
-    const reservationCollection = client.db("ruchiBangla").collection("reservation");
+    const reservationCollection = client
+      .db("ruchiBangla")
+      .collection("reservation");
     const purchaseCollection = client.db("ruchiBangla").collection("purchase");
     const galleryCollection = client.db("ruchiBangla").collection("gallery");
 
@@ -86,7 +87,6 @@ async function run() {
 
       res.cookie("token", token, cookieOptions).send({ success: true });
     });
-
     //clearing token:
     app.post("/logout", async (req, res) => {
       const user = req.body;
@@ -192,7 +192,6 @@ async function run() {
       if (req.params.email !== req.user.email) {
         return res.status(403).send({ message: "forbidden access" });
       }
-
       let query = {};
       if (req.params?.email) {
         query = { email: req.params.email };
